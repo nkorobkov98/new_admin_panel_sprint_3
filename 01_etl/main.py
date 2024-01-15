@@ -18,11 +18,6 @@ logging.basicConfig(format="%(asctime)s[%(name)s]: %(message)s", level="INFO")
 logger = logging.getLogger(__name__)
 
 
-def delete_entry(uid: str, fw_state: State):
-    es = es_helper.create_connection()
-    es.delete_bulk([uid])
-    fw_state.rm_state(uid)
-
 
 UPD_TURNS = {
     TableName.GENRE.value: TableName.PERSON.value,
@@ -36,7 +31,7 @@ UPD_TURNS = {
 def create_es_index():
     es = es_helper.create_connection()
     if not es.is_exist("movies"):
-        es.create_index("movies", es_index_schema.get())
+        es.create_index("movies", es_index_schema.get_json)
 
 
 def main():

@@ -1,5 +1,4 @@
-def get() -> dict:
-    return {
+get_json = {
         "settings": {
             "refresh_interval": "1s",
             "analysis": {

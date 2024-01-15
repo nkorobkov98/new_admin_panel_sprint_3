@@ -32,7 +32,8 @@ def backoff(
         @wraps(func)
         def inner(*args, **kwargs):
             i = 0
-            while True:
+            j = input("Максимальное кол-во запусков: ")
+            while i<j:
                 try:
                     return func(*args, **kwargs)
                 except tuple(exceptions):

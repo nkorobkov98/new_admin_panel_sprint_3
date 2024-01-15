@@ -91,12 +91,9 @@ class Etl:
         if rd_state := self._states.get_state(self._table_name):
             table_state = TableState(**rd_state)
 
-        while True:
+        while films:= self.extract(table_state):
             films = self.extract(table_state)
             dl_time = datetime.now(tz=timezone.utc)
-            if films is None:
-                # no_updates in table
-                break
 
             if es_films := self.transform(films):
                 self.load(es_films)

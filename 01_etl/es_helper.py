@@ -6,6 +6,7 @@ import elasticsearch.client.indices
 from elasticsearch import Elasticsearch, helpers
 
 from backoff import backoff
+from http import HTTPStatus
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ class Connection:
         logging.info(
             f"Creating index {index_name} with the following schema:{schema}"
         )
-        res = self._connection.indices.create(index=index_name, ignore=400,
+        res = self._connection.indices.create(index=index_name, ignore=HTTPStatus.BAD_REQUEST,
                                               body=schema)
         logger.info(f"Result: {res}")
 
@@ -72,8 +73,8 @@ class Connection:
 @backoff([ConnectionError, ConnectionRefusedError, ])
 def create_connection() -> Connection:
     connection = Elasticsearch(
-        [os.environ.get("ES_HOST", "127.0.0.1"), ],
-        port=int(os.environ.get("ES_PORT", 5432))
+        [os.environ.get("ES_HOST")],
+        port=int(os.environ.get("ES_PORT"))
     )
     if connection.ping():
         return Connection(connection)
